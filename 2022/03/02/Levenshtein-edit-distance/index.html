@@ -16,20 +16,21 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="本博客基于hexo框架搭建，使用主题为fluid。 hexo的文档参考链接, fluid主题的配置文档参考链接">
+    <meta name="description" content="思考小问题 我们来考虑这样一个问题：给定两个句子，判断这两个句子之间的相似度。直观来看，如果句子1和句子2之间只有几个字不同，其余字都一模一样，那这两个句子必然极为相似。换言之，如果句子1可以很容易地被修改成句子2，则说明这两个句子相似性很大。  举例说明两个句子极为相似的情况： s1 &#x3D; &quot;我是一只小小小小鸟，想要飞呀飞却飞也飞不高&quot; s2 &#x3D; &quot;我是一条小小小小狗，想要睡呀睡却睡也睡不够&quot;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="About the blog">
-<meta property="og:url" content="http://example.com/2022/03/01/about-blog/index.html">
+<meta property="og:title" content="Levenshtein Edit Distance">
+<meta property="og:url" content="http://example.com/2022/03/02/Levenshtein-edit-distance/index.html">
 <meta property="og:site_name" content="Howonder">
-<meta property="og:description" content="本博客基于hexo框架搭建，使用主题为fluid。 hexo的文档参考链接, fluid主题的配置文档参考链接">
+<meta property="og:description" content="思考小问题 我们来考虑这样一个问题：给定两个句子，判断这两个句子之间的相似度。直观来看，如果句子1和句子2之间只有几个字不同，其余字都一模一样，那这两个句子必然极为相似。换言之，如果句子1可以很容易地被修改成句子2，则说明这两个句子相似性很大。  举例说明两个句子极为相似的情况： s1 &#x3D; &quot;我是一只小小小小鸟，想要飞呀飞却飞也飞不高&quot; s2 &#x3D; &quot;我是一条小小小小狗，想要睡呀睡却睡也睡不够&quot;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-03-01T08:37:19.000Z">
-<meta property="article:modified_time" content="2022-03-02T06:18:46.839Z">
+<meta property="article:published_time" content="2022-03-02T12:33:20.000Z">
+<meta property="article:modified_time" content="2022-03-02T14:21:59.544Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary_large_image">
   
   
-  <title>About the blog - Howonder</title>
+  <title>Levenshtein Edit Distance - Howonder</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -175,7 +176,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="About the blog">
+            <span class="h2" id="subtitle" title="Levenshtein Edit Distance">
               
             </span>
 
@@ -185,8 +186,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2022-03-01 16:37" pubdate>
-        March 1, 2022 pm
+      <time datetime="2022-03-02 20:33" pubdate>
+        March 2, 2022 pm
       </time>
     </span>
   
@@ -196,7 +197,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      53 字
+      1.6k 字
     </span>
   
 
@@ -205,7 +206,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1 分钟
+      14 分钟
     </span>
   
 
@@ -234,23 +235,62 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">About the blog</h1>
+            <h1 style="display: none">Levenshtein Edit Distance</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：8 hours ago
+                  本文最后更新于：a minute ago
                 
               </p>
             
             <div class="markdown-body">
-              <p>本博客基于<a target="_blank" rel="noopener" href="https://hexo.io">hexo</a>框架搭建，使用主题为<a target="_blank" rel="noopener" href="https://github.com/fluid-dev/hexo-theme-fluid">fluid</a>。</p>
-<p>hexo的文档参考<a target="_blank" rel="noopener" href="https://hexo.io/docs">链接</a>, fluid主题的配置文档参考<a target="_blank" rel="noopener" href="https://hexo.fluid-dev.com/docs/guide/">链接</a></p>
+              <h1 id="思考小问题">思考小问题</h1>
+<p>我们来考虑这样一个问题：给定两个句子，判断这两个句子之间的相似度。直观来看，如果句子1和句子2之间只有几个字不同，其余字都一模一样，那这两个句子必然极为相似。换言之，如果句子1可以很容易地被修改成句子2，则说明这两个句子相似性很大。</p>
+<blockquote>
+<p>举例说明两个句子极为相似的情况：</p>
+<p>s1 = "我是一只小小小小鸟，想要飞呀飞却飞也飞不高"</p>
+<p>s2 = "我是一条小小小小狗，想要睡呀睡却睡也睡不够"</p>
+</blockquote>
+<h1 id="汉明距离">汉明距离</h1>
+<p>上面的思考问题中涉及到一个核心的问题：什么是相似度。直观来看，两个句子之间的相似度和将它们修改成对方的难易度有关。如果我们可以定量评价将句子1修改成句子2的“成本”，那不是很容易能判断句子之间的相似度了吗？我们并不是最先在这个方向上思考的人，早在1950年，一位如今大名鼎鼎的科学家汉明（Hamming）在对二元信道检错及纠错码的<a target="_blank" rel="noopener" href="https://ieeexplore.ieee.org/ielx7/6731005/6772728/06772729.pdf?tag=1">研究</a>[1]中提出了一种判断<span class="math inline">\(\{0, 1\}^n\)</span>空间内两个坐标距离的方法。这个空间内共有<span class="math inline">\(2^n\)</span>个点，任意一个维度中的坐标只能取0或1。对于此空间内的一个点，如果某个维度下的坐标出了错则该维度下的坐标会从0反转为1或从1反转为0。汉明基于此定义两个点<span class="math inline">\(x\)</span>和<span class="math inline">\(y\)</span>之间的距离<span class="math inline">\(D(x, y)\)</span>为n个维度中<span class="math inline">\(x\)</span>和<span class="math inline">\(y\)</span>坐标不同的数量，这也就是汉明距离。汉明距离有如下特点：</p>
+<p><span class="math display">\[
+\begin{align}
+D(x,y) = 0 &amp;&amp; if\ and\ only\ if\ x == y \\
+D(x, y) = D(y, x) &gt; 0 &amp;&amp; if\ x \ne y \\
+D(x, y) + D(y, z) \ge D(x, z) &amp;&amp;triangle\ inequality
+\end{align}
+\]</span></p>
+<p>我们来举例计算汉明距离：比如<span class="math inline">\(x=[0, 0, 0,1]\)</span>，<span class="math inline">\(y=[0, 0, 1, 0]\)</span>，<span class="math inline">\(x\)</span>和<span class="math inline">\(y\)</span>第2和第3个维度（维度从0开始计数）不同，那么它们之间的汉明距离就是2。</p>
+<p>换一种视角，如果我们将<span class="math inline">\(x\)</span>和<span class="math inline">\(y\)</span>当作两个句子，我们就可以利用汉明距离去计算两个句子相互修改的难易“成本”，接下来我们统称这种“成本”为距离。但这种计算方法有其固有缺点：只能应对两个句子长度相同的情况。如果两个句子长度不同，那我们就无法利用汉明距离计算两个句子间的距离了。</p>
+<h1 id="levenshtein距离">Levenshtein距离</h1>
+<p>那么如何计算两个长度不同的句子之间的距离呢？基于汉明的工作，俄国科学家Levenshtein于1965年在其<a target="_blank" rel="noopener" href="https://nymity.ch/sybilhunting/pdf/Levenshtein1966a.pdf">文章</a>[2]《可纠正删除、插入、反转的二进制纠错码》中提出了一种新的判断两个点<span class="math inline">\(x\)</span>和<span class="math inline">\(y\)</span>距离<span class="math inline">\(D(x,y)\)</span>的方法。这种计算方法的物理意义是每次可修改一个坐标并将<span class="math inline">\(x\)</span>修改为<span class="math inline">\(y\)</span>的最次少数，支持的修改方式有增、删、改。Levenshtein提出的评价指标如今成为了有名的Levenshtein距离，如今被广泛应用在生物信息学、自然语言处理等多个研究领域中。</p>
+<p>显然，计算Levenshtein距离要明显比计算汉明距离困难。</p>
+<h2 id="levenshtein距离的编程实现">Levenshtein距离的编程实现</h2>
+<h3 id="递归实现">递归实现</h3>
+<h3 id="递推实现">递推实现</h3>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>【TODO】待更新</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<hr />
+<h1 id="references">References：</h1>
+<p>[1] Hamming R W . Error detecting and error correcting codes[J]. Bell Labs Technical Journal, 1950, 29(2):147-160.<br> [2] Levenshtein V I . Binary codes capable of correcting deletions, insertions and reversals[J]. Doklady Akademii Nauk SSSR, 1965, 163.<br> [3] Berger B , Waterman M S , Yu Y W . Levenshtein Distance, Sequence Comparison and Biological Database Search[J]. IEEE Transactions on Information Theory, 2020, PP(99):1-1.</p>
 
             </div>
             <hr>
             <div>
               <div class="post-metas mb-3">
                 
+                
+                  <div class="post-meta">
+                    <i class="iconfont icon-tags"></i>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                  </div>
                 
               </div>
               
@@ -265,18 +305,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2022/03/02/Levenshtein-edit-distance/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Levenshtein Edit Distance</span>
-                        <span class="visible-mobile">Previous</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2022/02/27/hello-world/">
-                        <span class="hidden-mobile">Hello World</span>
+                      <a href="/2022/03/01/about-blog/">
+                        <span class="hidden-mobile">About the blog</span>
                         <span class="visible-mobile">Next</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -447,6 +481,48 @@
 
 
 
+
+  
+
+  
+    <!-- MathJax -->
+    <script>
+      MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']]
+        },
+        loader: {
+          load: ['ui/lazy']
+        },
+        options: {
+          renderActions: {
+            findScript: [10, doc => {
+              document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+                const display = !!node.type.match(/; *mode=display/);
+                const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+                const text = document.createTextNode('');
+                node.parentNode.replaceChild(text, node);
+                math.start = { node: text, delim: '', n: 0 };
+                math.end = { node: text, delim: '', n: 0 };
+                doc.math.push(math);
+              });
+            }, '', false],
+            insertedScript: [200, () => {
+              document.querySelectorAll('mjx-container').forEach(node => {
+                let target = node.parentNode;
+                if (target.nodeName.toLowerCase() === 'li') {
+                  target.parentNode.classList.add('has-jax');
+                }
+              });
+            }, '', false]
+          }
+        }
+      };
+    </script>
+
+    <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" ></script>
+
+  
 
 
 
