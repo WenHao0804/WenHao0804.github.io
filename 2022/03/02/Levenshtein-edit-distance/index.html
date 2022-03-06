@@ -18,21 +18,21 @@
   
     <meta name="description" content="Opening question 我们来考虑这样一个问题：给定两个句子，判断这两个句子之间的相似度。直观来看，如果句子1和句子2之间只有几个字不同，其余字都一模一样，那这两个句子必然极为相似。换言之，如果句子1可以很容易地被修改成句子2，则说明这两个句子相似性很大。  举例说明两个句子极为相似的情况： s1 &#x3D; &quot;我是一只小小小小鸟，想要飞呀飞却飞也飞不高&quot; s2 &#x3D; &quot;我是一条小小小小狗，想要睡">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Edit Distance">
+<meta property="og:title" content="Sentence Similarity——String Based Methods">
 <meta property="og:url" content="http://example.com/2022/03/02/Levenshtein-edit-distance/index.html">
 <meta property="og:site_name" content="Howonder">
 <meta property="og:description" content="Opening question 我们来考虑这样一个问题：给定两个句子，判断这两个句子之间的相似度。直观来看，如果句子1和句子2之间只有几个字不同，其余字都一模一样，那这两个句子必然极为相似。换言之，如果句子1可以很容易地被修改成句子2，则说明这两个句子相似性很大。  举例说明两个句子极为相似的情况： s1 &#x3D; &quot;我是一只小小小小鸟，想要飞呀飞却飞也飞不高&quot; s2 &#x3D; &quot;我是一条小小小小狗，想要睡">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/img/editdistance.png">
 <meta property="article:published_time" content="2022-03-02T12:33:20.000Z">
-<meta property="article:modified_time" content="2022-03-05T05:41:57.825Z">
+<meta property="article:modified_time" content="2022-03-06T10:44:04.290Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="算法">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/img/editdistance.png">
   
   
-  <title>Edit Distance - Howonder</title>
+  <title>Sentence Similarity——String Based Methods - Howonder</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4/dist/css/bootstrap.min.css" />
 
@@ -182,7 +182,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="Edit Distance">
+            <span class="h2" id="subtitle" title="Sentence Similarity——String Based Methods">
               
             </span>
 
@@ -241,11 +241,11 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Edit Distance</h1>
+            <h1 style="display: none">Sentence Similarity——String Based Methods</h1>
             
               <p class="note note-info">
                 
-                  本文最后更新于：March 5, 2022 pm
+                  本文最后更新于：March 6, 2022 pm
                 
               </p>
             
@@ -462,6 +462,35 @@ sim = 1 - \frac{ld}{max(l_w, l_x)}
               
             </div>
 
+            
+              <!-- Comments -->
+              <article class="comments" id="comments" lazyload>
+                
+                  
+                
+                
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://cdn.jsdelivr.net/npm/valine@1/dist/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"FoET6Yr6DT9SakeSwoun5LSW-gzGzoHsz","appKey":"ANGfeuRAw5bvV9L24SoUDMWC","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          Fluid.plugins.initFancyBox('#valine .vcontent img:not(.vemoji)');
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+              </article>
             
           </article>
         </div>
