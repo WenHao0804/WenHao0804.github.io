@@ -25,9 +25,11 @@
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/img/editdistance.png">
 <meta property="article:published_time" content="2022-03-02T12:33:20.000Z">
-<meta property="article:modified_time" content="2022-03-07T03:11:15.171Z">
+<meta property="article:modified_time" content="2022-03-07T13:11:49.892Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="算法">
+<meta property="article:tag" content="文本相似">
+<meta property="article:tag" content="编辑距离">
+<meta property="article:tag" content="str-based">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="http://example.com/img/editdistance.png">
   
@@ -203,7 +205,7 @@
   
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      7.4k 字
+      12k 字
     </span>
   
 
@@ -212,7 +214,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      62 分钟
+      101 分钟
     </span>
   
 
@@ -245,7 +247,7 @@
             
               <p class="note note-info">
                 
-                  本文最后更新于：March 7, 2022 am
+                  本文最后更新于：March 7, 2022 pm
                 
               </p>
             
@@ -329,9 +331,10 @@ min\begin{cases}
 图1 两个序列的最长公共子序列，如"AGGTAB"和"GXTXAYB"的最长公共子序列是"GTAB"
 </p>
 <p>LCS问题是一个经典的计算机科学问题，也是如diff、git等具有数据比较功能程序的算法基础。在LCS问题中，子序列不需要在原序列中占用连续的位置。一般性的LCS问题是NP-hard问题。但当序列的长度确定时，LCS问题可以使用动态规划在多项式时间内解决<sup id="fnref:6" class="footnote-ref"><a href="#fn:6" rel="footnote"><span class="hint--top hint--rounded" aria-label="屈, 婉玲. 算法设计与分析. 北京清华大学学研大厦A座: 清华大学出版社. 2011: 67. ISBN 978-7-302-24756-2.
-">[6]</span></a></sup>。计算出LCS之后，两个句子之间的编辑距离显而易见：</p>
+">[6]</span></a></sup>。Zheng<sup id="fnref:10" class="footnote-ref"><a href="#fn:10" rel="footnote"><span class="hint--top hint--rounded" aria-label="郑凯,欧阳林艳,林强,刘芳冰.LCS算法与编辑距离算法的研究[J].信息通信,2015(05):22-23.
+">[10]</span></a></sup>等人通过以下公式，利用LCS计算两个句子之间的相似度计算：</p>
 <p><span class="math display">\[
-D_{x,y}=l_x + l_y - 2 \times lcs(x,y)
+sim_{x,y}=\frac{2\times lcs(x,y)}{len_x+len_y}
 \]</span></p>
 <h2 id="两个序列lcs的解法">两个序列LCS的解法</h2>
 <p>我们仍然可以递归性地定义LCS： <span class="math display">\[
@@ -368,23 +371,203 @@ D_{x,y}(i-1,j-1)+1 &amp;&amp; if\ x[i]==x[j]\\[5pt]
 \]</span> 但实际计算过程中就不是上面的式子那么简单。我们要得到的是递归过程中产生的最大值，这样就必需用一个外部变量来记录，这样的实现确实不够优雅。所以给出如下递推程序：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">lcs_</span>(<span class="hljs-params">s1, s2</span>)-&gt;<span class="hljs-built_in">int</span>:<br>    n1, n2 = <span class="hljs-built_in">len</span>(s1), <span class="hljs-built_in">len</span>(s2)<br>    dp = [[<span class="hljs-number">0</span>] * (n2 + <span class="hljs-number">1</span>) <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n1 + <span class="hljs-number">1</span>)]<br>    longest = -<span class="hljs-number">1</span><br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n1):<br>        <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(n2):<br>            <span class="hljs-keyword">if</span> s1[i] == s2[j]:<br>                dp[i][j] = dp[i-<span class="hljs-number">1</span>][j-<span class="hljs-number">1</span>] + <span class="hljs-number">1</span><br>                longest = <span class="hljs-built_in">max</span>(dp[i][j], longest)<br>    <span class="hljs-keyword">return</span> longest<br></code></pre></td></tr></table></figure>
 <p>实际上最长公共子串问题还可以用贪心的方法来做。受到冯<sup id="fnref:9" class="footnote-ref"><a href="#fn:9" rel="footnote"><span class="hint--top hint--rounded" aria-label="冯凯, 王小华, 谌志群. 基于动态规划的汉语句子相似度算法[J]. 计算机工程, 2013, 39(2):5.
-">[9]</span></a></sup>等人的启发，我们可以用贪心的做法来获得两个序列之初间的最长公共子串。具体做法如下：</p>
+">[9]</span></a></sup>等人的启发，我们可以用贪心的做法来获得两个序列<code>s1</code>和<code>s2</code>之初间的最长公共子串。具体做法如下： - <strong>Step1</strong>，分配一个动态列表<code>list</code>。 - <strong>Step2</strong>，遍历<code>s2</code>，获得其中的所有n-gram。如果某gram存在于<code>s1</code>中，则在<code>list</code>中添加这个gram在<code>s1</code>中的起始及终止下标。 - <strong>Step3</strong>，将<code>list</code>按照（终止下标，起始下标）的排序优先级排序，维护一个滑动窗口，融合<code>list</code>中所有相连的区间范围。此步骤使用优先队列实现有序性也可行，甚至复杂度比直接排序来更优秀。 - <strong>Step4</strong>，获得最长的区间，得到最长公共子串。</p>
+<p>在冯等人的工作中，最长公共子串的计算基于矩阵以及复杂的链表操作来完成。我优化其实现方式，仅使用动态列表及贪心算法即可复现。在此处先不给出以上算法的实现代码，在最后一节基于最长公共子串计算句子相似度时会给出代码。</p>
 <h1 id="计算句子相似度">计算句子相似度</h1>
 <h2 id="基于编辑距离计算句子相似度">基于编辑距离计算句子相似度</h2>
 <p>文章开头，我们在思考如何判断句子之间的相似度。但大部分时间我们都在思考将两个句子修改至相同所耗费的“成本”，也就是编辑距离。当编辑操作支持的内容不同时，编辑距离的定义和计算方式也不同。</p>
 <p>编辑距离本身就能描述两个序列之间的相似程度。客观上看，编辑距离越小，则序列间的相似度越大。如下公式<sup id="fnref:7" class="footnote-ref"><a href="#fn:7" rel="footnote"><span class="hint--top hint--rounded" aria-label="王智慧. 基于改进Levenshtein距离算法的轮廓匹配技术及实现[D]. 河南大学.
-">[7]</span></a></sup>定义了基于Levenshtein距离的句子相似度计算方式，其中<span class="math inline">\(ld\)</span>代表Levenshtein距离，如果换成Hammin距离或基于LCS的编辑距离也未尝不可。</p>
+">[7]</span></a></sup>定义了基于Levenshtein距离的句子相似度计算方式，其中<span class="math inline">\(ld\)</span>代表Levenshtein距离。</p>
 <p><span class="math display">\[
 sim = 1 - \frac{ld}{max(l_w, l_x)}
 \]</span></p>
-<h2 id="基于最长公共子串计算句子相似度">基于最长公共子串计算句子相似度</h2>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>【TODO】待更新</p>
-</blockquote>
-</blockquote>
-</blockquote>
+<h2 id="基于公共子串计算句子相似度">基于公共子串计算句子相似度</h2>
+<p>在冯等人的工作中，计算两个序列的相似度的公式为： <span class="math display">\[
+Sim(Q_u,Q_i)=
+\frac{2\times\sum_{i=1}^{len(list)}len(substr_i)}
+        {|Q_u| + |Q_i|}
+\times
+\frac{ln(\sum_{i=1}^{len(list)}len(substr_i))}
+        {\sum_{i=1}^{len(list)}ln(len(substr_i))}
+\]</span> 其中，<span class="math inline">\(substr_i\)</span>是序列<span class="math inline">\(Q_u\)</span>中出现在<span class="math inline">\(Q_i\)</span>中的连续子串。利用python语言实现冯等人的算法，并计算两个序列的相似度，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> math<br><span class="hljs-keyword">import</span> heapq<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">similarity</span>(<span class="hljs-params">q1, q2, gram_len=<span class="hljs-number">2</span></span>):<br>    spans = []<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(q2)- gram_len + <span class="hljs-number">1</span>):<br>        idx = q1.find(q2[i:i+gram_len])<br>        <span class="hljs-keyword">if</span> idx == -<span class="hljs-number">1</span>:<br>            <span class="hljs-keyword">continue</span><br>        heapq.heappush(spans, [i+gram_len-<span class="hljs-number">1</span>, i])<br><br>    <span class="hljs-keyword">if</span> <span class="hljs-keyword">not</span> spans:<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span><br>    r, l = spans[<span class="hljs-number">0</span>]<br>    spans_merged = []<br>    <span class="hljs-keyword">while</span> spans:<br>        s_r, s_l = heapq.heappop(spans)<br>        <span class="hljs-keyword">if</span> s_l &lt; l:<br>            l = s_l<br>        <span class="hljs-keyword">elif</span> s_l &lt;= r:<br>            r = s_r<br>        <span class="hljs-keyword">else</span>:<br>            spans_merged.append([l, r])<br>            l, r = s_l, s_r<br>    spans_merged.append([l, r])<br><br>    sim = (<span class="hljs-number">2</span> * <span class="hljs-built_in">sum</span>(r - l + <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> l, r <span class="hljs-keyword">in</span> spans_merged)) / (<span class="hljs-built_in">len</span>(q1) + <span class="hljs-built_in">len</span>(q2)) * math.log(<span class="hljs-built_in">sum</span>(r - l + <span class="hljs-number">1</span> <span class="hljs-keyword">for</span> l, r <span class="hljs-keyword">in</span> spans_merged)) / <span class="hljs-built_in">sum</span>(math.log(r - l + <span class="hljs-number">1</span>) <span class="hljs-keyword">for</span> l, r <span class="hljs-keyword">in</span> spans_merged)<br><br>    <span class="hljs-keyword">return</span> sim<br><br></code></pre></td></tr></table></figure>
+<h2 id="实践">实践</h2>
+<p>我们可以在一些数据上进行测试，以验证上方判断句子相似度算法的合理性。数据的来源是我学校的一个智能客服系统中预设的问题，我通过爬虫拿到了系统中的问句，去除隐私信息后共有108条句子，可作为我们用来验证算法的语料库使用。我们并没有人工标注好标签，所以只能定性分析算法的有效性。语料如下：</p>
+<details>
+<summary>
+<mark><font color=darkred>点击查看详细内容</font></mark>
+</summary>
+<div class="code-wrapper"><pre><code class="hljs">
+应属后勤处的报修
+校外访问知网,万方等资源时提示校园网账号被锁定怎么办？
+微信企业号,换微信号或者换学工号后需要重新完成统一身份认证
+企业号关注与认证方法
+如何将已退休或离职教工以及已退学学生从疫情防控通每日填报名单中删除
+统一身份认证用户名或者密码错误怎么办？
+迎新系统不知道登陆账号和密码
+校园网或vpn认证时提示密码不正确或认证失败
+当前时段空闲教室有哪些？
+门禁权限在哪里添加？
+雨课堂官方版和学校的专业版有什么区别？
+关于雨课堂的使用问题
+教室设备故障、使用遇到问题怎么办
+如何通过移动端实现课堂签到？
+云平台的课件资源主要支持哪些格式，是否可以在线浏览？
+试题库是否支持Latex或Markdown 格式的公式？
+老师发布作业之后是否还可以修改，例如作业截止日期等？
+布置作业后，什么时候可以批改？
+如何添加助教？
+一位老师给多个班级上同一门课，该如何处理？
+爱课堂怎么添加个别同学或助教？
+爱课堂多位老师同上一门课应该怎么做？
+爱课堂开课或选课异常
+爱课堂账号异常
+雨课堂本科专业版如何添加研究生为课程的助教？
+雨课堂本科专业版课程或学生数据不正确怎么办？
+雨课堂如何绑定北京邮电大学（本科）专业版？
+补卡后，原卡中的钱如何转入新卡？
+如何使用校园卡完成校内生活缴费？
+如何绑定充值校园卡？
+校园卡的密码都有什么作用？
+校园卡被冻结_挂失，怎么办？
+如何知道自己丢失的卡是否被捡到_
+如何挂失校园卡？
+临时出入校申请没有权限
+校内通过网页访问服务大厅时加载失败？
+校园卡已被停用，卡内余额怎么处理？
+在校外如何访问学校内网资源？
+VPN客户端下载安装与连接
+在用GlobalProtect登录VPN后，显示未连接且不显示学工号怎么办？
+移动端如何使用VPN服务
+企业号中体育馆预约、银行卡信息填报等应用内部问题
+BT服务
+返校申请没有权限或者为红码
+疫情防控通定位时无法获取位置信息
+信息门户可以正常登录而链接至本科教务系统、研究生系统、财务系统时显示用户不存在
+微信企业号，身份认证过程没有任何报错信息，成功显示学工号姓名及电话号码或者邮件信息，但依然没有出现应用列表
+虚拟机回收问题？
+域名怎么申请？
+虚拟机扩容问题？
+虚拟机怎么申请？
+我们这断网了，怎么才能恢复网络？
+VPN，PC端登录时警告_错误栏显示提示为“验证失败”
+VPN，PC端登录时警告_错误栏显示提示为“按需模式”或“无法连接到服务站”
+VPN，PC端下载后安装失败
+为什么无线网网速慢？
+网络时断时续
+宿舍的有线网无法连接，怎么办？
+电话业务申请（新装、移机、撤机、长途业务，来电呼转、业务变更等）
+座机电话维护_维修
+如何添加大门人脸识别？
+我的校园卡为什么不能在新食堂三层（教工自助餐）就餐？我的卡能在哪儿吃饭？
+如何激活NFC手机的 “副卡”？
+如何查询消费记录？
+如何刷卡消费？
+如何修改消费限额？
+消费限额是什么？
+如何修改密码？
+查询或消费密码忘了怎么办？
+看到招领提示后，去哪取卡？
+什么是自助圈存机？
+校内自助圈存机的存放位置？
+各校区的遗失卡收集箱都在学校什么位置？
+校园卡已过失效期怎么办？在哪申请延期？
+如何申请临时人员校园卡？怎么填写？在哪申请？
+支付宝、微信充值成功后如何领款？
+如何补办校园卡？
+各校区卡务中心工作时间、地点及联系电话？
+在共享画面菜单中找不到，需要共享的音频
+会议画面怎么调整
+会议人员签到时显示不在名单里面
+会议签到无法下发
+邮箱密码找回
+客户端使用方法
+如何通过vpn在校外注册个人邮箱
+个人电子邮件申请流程
+公共邮箱申请与延期
+什么是安全登录
+邮箱出现安全登录提示
+同域名搬家完成后，是否可以在之前的客户端修改服务器地址和密码方式直接使用
+如何通过vpn在校外进行邮箱的收发
+网页访问邮件系统时加载失败
+某环节其实已办理，但平台显示未办理
+研究生指导教师无法办理或指导教师看不到此学生的办理记录
+离校系统辅导员无法办理？
+进入离校系统出现空白页面
+迎新办理搜索某个学生时提示不在任何批次中
+迎新系统登陆空白，无法登陆
+某个流程表单填写不了信息，或提交不了流程
+想要取消某流程发布，或取消服务大厅某流程申请入口界面
+查看某流程数据报表，导出数据报表
+在某个流程某个节点添加审批人
+查找我的事项里面的任务，我的发起等记录
+网上服务大厅中已发送的表单中信息填写错误可否更改
+服务大厅查找申请的表单流程
+网上服务大厅中手机号码变更
+公告或新闻发出之后在门户公告或通知栏中看不到
+需要开通信息门户中的发公告或新闻的功能
+  </code></pre></div>
+</details>
+<p>我们要做的是，接收用户输入的问句，与语料库中的问句进行相似度判断，返回用户最相似的几个句子。</p>
+<h3 id="基于levenshtein编辑距离寻找最相似问句">基于Levenshtein编辑距离寻找最相似问句</h3>
+<details>
+<summary>
+<mark><font color=darkred>点击查看详细内容</font></mark>
+</summary>
+<div class="note note-info">
+            <p>输入：我想补办校园卡</p>
+          </div>
+<p>以下为算法的输出结果，其中右侧为库中的问句，左侧为用户输入句子与此问句的相似度。本文以下类似输出不再解释其意义。</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">0</span>.<span class="hljs-number">625</span> 如何补办校园卡？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">375</span> 如何挂失校园卡？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">300</span> 如何绑定充值校园卡？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">188</span> 如何使用校园卡完成校内生活缴费？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">136</span> 如何申请临时人员校园卡？怎么填写？在哪申请？<br></code></pre></td></tr></table></figure>
+<div class="note note-info">
+            <p>输入：我出门的时候无法识别人脸怎么回事</p>
+          </div>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">0</span>.<span class="hljs-number">250</span> 宿舍的有线网无法连接，怎么办？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">125</span> 校园卡被冻结_挂失，怎么办？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">125</span> 如何添加大门人脸识别？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">125</span> 查询或消费密码忘了怎么办？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">125</span> 会议画面怎么调整<br></code></pre></td></tr></table></figure>
+<div class="note note-info">
+            <p>输入：出校的时候怎么人脸识别?</p>
+          </div>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">0</span>.<span class="hljs-number">333</span> 如何添加大门人脸识别？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">167</span> 域名怎么申请？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">167</span> 虚拟机怎么申请？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">167</span> 会议画面怎么调整<br><span class="hljs-attribute">0</span>.<span class="hljs-number">158</span> 雨课堂官方版和学校的专业版有什么区别？<br></code></pre></td></tr></table></figure>
+</details>
+<h3 id="基于最长公共子序列寻找最相似问句">基于最长公共子序列寻找最相似问句</h3>
+<details>
+<summary>
+<mark><font color=darkred>点击查看详细内容</font></mark>
+</summary>
+<div class="note note-info">
+            <p>输入：我想补办校园卡</p>
+          </div>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">0</span>.<span class="hljs-number">667</span> 如何补办校园卡？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">400</span> 如何挂失校园卡？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">353</span> 如何绑定充值校园卡？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">300</span> 校园卡的密码都有什么作用？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">286</span> 校园卡被冻结_挂失，怎么办？<br></code></pre></td></tr></table></figure>
+<div class="note note-info">
+            <p>我出门的时候无法识别人脸怎么回事</p>
+          </div>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">0</span>.<span class="hljs-number">323</span> 宿舍的有线网无法连接，怎么办？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">222</span> 如何添加大门人脸识别？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">211</span> 如何申请临时人员校园卡？怎么填写？在哪申请？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">188</span> 疫情防控通定位时无法获取位置信息<br><span class="hljs-attribute">0</span>.<span class="hljs-number">188</span> 我们这断网了，怎么才能恢复网络？<br></code></pre></td></tr></table></figure>
+<div class="note note-info">
+            <p>出校的时候怎么人脸识别?</p>
+          </div>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">0</span>.<span class="hljs-number">348</span> 如何添加大门人脸识别？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">258</span> 雨课堂官方版和学校的专业版有什么区别？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">240</span> 校园卡的密码都有什么作用？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">231</span> 校园卡被冻结_挂失，怎么办？<br><span class="hljs-attribute">0</span>.<span class="hljs-number">222</span> 爱课堂怎么添加个别同学或助教？<br></code></pre></td></tr></table></figure>
+</details>
+<h3 id="基于公共子串寻找最相似问句">基于公共子串寻找最相似问句</h3>
+我们实现冯等人的算法，基于公共子串寻找最相似的问句。考虑到基于公共子串判断两个句子之间的相似度对专有名词更敏感，我们分别用gram长度为2、3、4的参数计算用户输入的句子与语料库中的句子之间的相似度，并以<span class="math inline">\(\frac{1.5}{6}\)</span>、<span class="math inline">\(\frac{2}{6}\)</span>、<span class="math inline">\(\frac{2.5}{6}\)</span>的比例将其融合起来。我们以融合后的相似度为用户输入的句子与库中的语料之间的相似度。
+<details>
+<summary>
+<mark><font color=darkred>点击查看详细内容</font></mark>
+</summary>
+<div class="note note-info">
+            <p>输入：我想补办校园卡</p>
+          </div>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs txt">0.667 如何补办校园卡？<br>0.233 如何挂失校园卡？<br>0.206 如何绑定充值校园卡？<br>0.175 校园卡的密码都有什么作用？<br>0.167 校园卡被冻结_挂失，怎么办？<br></code></pre></td></tr></table></figure>
+<div class="note note-info">
+            <p>输入：我出门的时候无法识别人脸怎么回事</p>
+          </div>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs txt">0.074 如何添加大门人脸识别？<br>0.065 宿舍的有线网无法连接，怎么办？<br>0.043 域名怎么申请？<br>0.042 虚拟机怎么申请？<br>0.042 会议画面怎么调整<br></code></pre></td></tr></table></figure>
+<div class="note note-info">
+            <p>输入：出校的时候怎么人脸识别?</p>
+          </div>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs txt">0.348 如何添加大门人脸识别？<br>0.053 域名怎么申请？<br>0.050 虚拟机怎么申请？<br>0.050 会议画面怎么调整<br>0.040 查询或消费密码忘了怎么办？<br></code></pre></td></tr></table></figure>
+<p>第二个及第三个用户输入问句中，“人脸识别”是个专业词汇，并且语料库中含有此词汇。第三个问句的输出结果中，第一个输入结果的置信度明显高于第二个问句的输出结果（<span class="math inline">\(0.348 &gt; 0.074\)</span>）。可见，在输入问句含有语料库中的专有词汇的情况下，程序返回的结果就会更可靠。这一点也和冯等人的分析结果相同。</p>
+</details>
+<h1 id="总结">总结</h1>
+<p>本文整体上梳理了编辑距离的定义、发展过程、实现方式，以及基于编辑距离等方式计算句子相似度的方法，并在自建的语料库上进行了相似度匹配的实验。</p>
 <hr />
 <h1 id="references">References：</h1>
 <section class="footnotes">
@@ -417,6 +600,9 @@ sim = 1 - \frac{ld}{max(l_w, l_x)}
 <li>
 <span id="fn:9" class="footnote-text"><span>冯凯, 王小华, 谌志群. 基于动态规划的汉语句子相似度算法[J]. 计算机工程, 2013, 39(2):5. <a href="#fnref:9" rev="footnote" class="footnote-backref"> ↩︎</a></span></span>
 </li>
+<li>
+<span id="fn:10" class="footnote-text"><span>郑凯,欧阳林艳,林强,刘芳冰.LCS算法与编辑距离算法的研究[J].信息通信,2015(05):22-23. <a href="#fnref:10" rev="footnote" class="footnote-backref"> ↩︎</a></span></span>
+</li>
 </ol>
 </div>
 </section>
@@ -426,11 +612,26 @@ sim = 1 - \frac{ld}{max(l_w, l_x)}
             <div>
               <div class="post-metas mb-3">
                 
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95/">算法</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95/NLP/">NLP</a>
+                    
+                      <a class="hover-with-bg" href="/categories/%E7%AE%97%E6%B3%95/NLP/%E4%BC%A0%E7%BB%9F%E7%AE%97%E6%B3%95/">传统算法</a>
+                    
+                  </div>
+                
                 
                   <div class="post-meta">
                     <i class="iconfont icon-tags"></i>
                     
-                      <a class="hover-with-bg" href="/tags/%E7%AE%97%E6%B3%95/">算法</a>
+                      <a class="hover-with-bg" href="/tags/%E6%96%87%E6%9C%AC%E7%9B%B8%E4%BC%BC/">文本相似</a>
+                    
+                      <a class="hover-with-bg" href="/tags/%E7%BC%96%E8%BE%91%E8%B7%9D%E7%A6%BB/">编辑距离</a>
+                    
+                      <a class="hover-with-bg" href="/tags/str-based/">str-based</a>
                     
                   </div>
                 
